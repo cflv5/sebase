@@ -13,6 +13,10 @@ public final class ResponseHeader {
         return new ResponseHeader(true, new HeaderMessage(0, ""));
     }
 
+    public static ResponseHeader fail(HeaderMessage message) {
+        return new ResponseHeader(false, message);
+    }
+
     public boolean isSuccess() {
         return success;
     }
