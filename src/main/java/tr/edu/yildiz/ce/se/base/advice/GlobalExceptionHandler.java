@@ -10,12 +10,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import tr.edu.yildiz.ce.se.base.domain.ExceptionResponse;
 import tr.edu.yildiz.ce.se.base.domain.HeaderMessage;
 import tr.edu.yildiz.ce.se.base.domain.ResponseHeader;
-import tr.edu.yildiz.ce.se.base.exception.SeBaseException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(SeBaseException.class)
+    @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ExceptionResponse> handleBaseException(RuntimeException ex) {
         return ResponseEntity
                 .internalServerError()
