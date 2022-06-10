@@ -1,6 +1,8 @@
 package tr.edu.yildiz.ce.se.base.domain;
 
-public final class ResponseHeader {
+import java.io.Serializable;
+
+public final class ResponseHeader implements Serializable {
     private boolean success;
     private HeaderMessage message;
 
