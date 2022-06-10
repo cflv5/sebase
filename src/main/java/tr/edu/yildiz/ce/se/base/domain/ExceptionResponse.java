@@ -1,8 +1,9 @@
 package tr.edu.yildiz.ce.se.base.domain;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class ExceptionResponse {
+public class ExceptionResponse implements Serializable {
     private ResponseHeader responseHeader;
     private LocalDateTime time;
 
