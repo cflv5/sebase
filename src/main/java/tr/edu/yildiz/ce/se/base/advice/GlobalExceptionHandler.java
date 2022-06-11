@@ -19,6 +19,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(SeBaseException.class)
     public ResponseEntity<ExceptionResponse> handleBaseException(SeBaseException ex) {
+        logger.error("An exception throwned!", ex);
         return ResponseEntity
                 .status(Objects.isNull(ex.getStatus()) ? HttpStatus.INTERNAL_SERVER_ERROR : ex.getStatus())
                 .body(new ExceptionResponse(ResponseHeader
@@ -27,6 +28,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ExceptionResponse> handleGeneric(RuntimeException ex) {
+        logger.error("An exception throwned!", ex);
         return ResponseEntity
                 .internalServerError()
                 .body(new ExceptionResponse(ResponseHeader
