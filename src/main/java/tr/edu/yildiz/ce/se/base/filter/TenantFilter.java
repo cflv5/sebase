@@ -18,24 +18,31 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import tr.edu.yildiz.ce.se.base.context.TenantContext;
 import tr.edu.yildiz.ce.se.base.context.TenantFactory;
+import tr.edu.yildiz.ce.se.base.domain.HeaderConstants;
 
 @Component
 public class TenantFilter extends OncePerRequestFilter {
     private static final Logger LOGGER = LoggerFactory.getLogger(TenantFilter.class);
 
     private static final List<String> excludedURLs = List.of("/v1/api/user/login", "/v1/api/user/register");
-    private static final String X_TENANT_ID = "X_TENANT_ID";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         LOGGER.info("Intercepting request.");
-        var tenantId = request.getHeader(X_TENANT_ID);
+        var tenantId = request.getHeader(HeaderConstants.TENANT_ID);
+        var accessToken = request.getHeader(HeaderConstants.ACCESS_TOKEN);
 
         if (Objects.isNull(tenantId) || tenantId.isEmpty()) {
             LOGGER.info("No tenant found");
             response.sendError(HttpStatus.UNAUTHORIZED.value());
         } else {
+            if (request.getServletPath().contains("/internal/")
+                    && (Objects.isNull(accessToken) || accessToken.isBlank())) {
+                LOGGER.info("No service access token found");
+                response.sendError(HttpStatus.UNAUTHORIZED.value());
+                return;
+            }
             TenantContext.setCurrentTenant(TenantFactory.createTenant(tenantId));
             LOGGER.info("Tenant set with id {}", tenantId);
             filterChain.doFilter(request, response);
