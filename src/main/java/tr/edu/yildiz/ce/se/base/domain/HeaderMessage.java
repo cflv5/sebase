@@ -3,8 +3,12 @@ package tr.edu.yildiz.ce.se.base.domain;
 import java.io.Serializable;
 
 public class HeaderMessage implements Serializable {
-    private final int code;
-    private final String text;
+    private int code;
+    private String text;
+
+    public HeaderMessage() {
+        super();
+    }
 
     public HeaderMessage(int code, String text) {
         this.code = code;
@@ -15,8 +19,16 @@ public class HeaderMessage implements Serializable {
         return code;
     }
 
+    public void setCode(int code) {
+        this.code = code;
+    }
+
     public String getText() {
         return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 
     public static class Builder {

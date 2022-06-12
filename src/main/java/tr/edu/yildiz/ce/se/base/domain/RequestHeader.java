@@ -3,7 +3,11 @@ package tr.edu.yildiz.ce.se.base.domain;
 import java.io.Serializable;
 
 public final class RequestHeader implements Serializable {
-    private final String tenantId;
+    private String tenantId;
+
+    public RequestHeader() {
+        super();
+    }
 
     public RequestHeader(String tenantId) {
         this.tenantId = tenantId;
@@ -11,6 +15,10 @@ public final class RequestHeader implements Serializable {
 
     public String getTenantId() {
         return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
     }
 
 }

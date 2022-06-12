@@ -6,6 +6,10 @@ public final class ResponseHeader implements Serializable {
     private boolean success;
     private HeaderMessage message;
 
+    public ResponseHeader() {
+        super();
+    }
+
     public ResponseHeader(boolean success, HeaderMessage message) {
         this.success = success;
         this.message = message;
