@@ -10,15 +10,20 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import tr.edu.yildiz.ce.se.base.context.TenantContext;
+import tr.edu.yildiz.ce.se.base.domain.ExceptionResponse;
 import tr.edu.yildiz.ce.se.base.exception.SeBaseException;
 
 @Service
@@ -26,12 +31,15 @@ public class StandartSeRestService implements SeRestService {
     private static final Logger LOGGER = LoggerFactory.getLogger(StandartSeRestService.class);
 
     private final RestTemplate restTemplate;
+    private final ObjectMapper objectMapper;
 
     @Value("${se.base.rest-client.access-token}")
     private String accessToken;
 
-    public StandartSeRestService() {
+    @Autowired
+    public StandartSeRestService(ObjectMapper objectMapper) {
         this.restTemplate = new RestTemplate();
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -46,11 +54,29 @@ public class StandartSeRestService implements SeRestService {
                     .orElseThrow(
                             () -> new SeBaseException("Could not make a REST call", HttpStatus.INTERNAL_SERVER_ERROR));
 
+        } catch (final HttpClientErrorException e) {
+            var response = deserializeExceptionResponse(e);
+            throw new SeBaseException(response.getResponseHeader().getMessage().getText(), e.getStatusCode());
         } catch (Exception e) {
-            LOGGER.error("Exception occured while making rest call", e);
-            throw new SeBaseException("Could not make a REST call", HttpStatus.INTERNAL_SERVER_ERROR);
+            throwInternalError(e);
+            return null;
         }
 
+    }
+
+    private ExceptionResponse deserializeExceptionResponse(HttpClientErrorException e) {
+        try {
+            LOGGER.error("Client returned with error:", e);
+            return objectMapper.readValue(e.getResponseBodyAsString(), ExceptionResponse.class);
+        } catch (Exception ex) {
+            throwInternalError(ex);
+            return null;
+        }
+    }
+
+    private void throwInternalError(Exception e) {
+        LOGGER.error("Exception occured while making rest call", e);
+        throw new SeBaseException("Could not make a REST call", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
