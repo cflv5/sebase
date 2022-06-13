@@ -13,6 +13,10 @@ public class OnlyHeaderControllerResponse implements Serializable {
         return new OnlyHeaderControllerResponse(ResponseHeader.success());
     }
 
+    public static OnlyHeaderControllerResponse success(String text) {
+        return new OnlyHeaderControllerResponse(ResponseHeader.success(text));
+    }
+
     public static OnlyHeaderControllerResponse failed(HeaderMessage message) {
         return new OnlyHeaderControllerResponse(ResponseHeader.fail(message));
     }

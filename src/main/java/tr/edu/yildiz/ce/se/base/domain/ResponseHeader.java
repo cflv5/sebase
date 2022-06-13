@@ -19,6 +19,10 @@ public final class ResponseHeader implements Serializable {
         return new ResponseHeader(true, new HeaderMessage(0, ""));
     }
 
+    public static ResponseHeader success(String text) {
+        return new ResponseHeader(true, new HeaderMessage(0, text));
+    }
+
     public static ResponseHeader fail(HeaderMessage message) {
         return new ResponseHeader(false, message);
     }
