@@ -32,6 +32,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity
                 .internalServerError()
                 .body(new ExceptionResponse(ResponseHeader
-                        .fail(new HeaderMessage(500, ex.getMessage())), LocalDateTime.now()));
+                        .fail(new HeaderMessage(500,
+                                Objects.isNull(ex.getMessage()) || ex.getMessage().isBlank() ? "Internal Error"
+                                        : ex.getMessage())),
+                        LocalDateTime.now()));
     }
 }
