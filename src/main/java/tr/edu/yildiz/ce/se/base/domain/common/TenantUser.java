@@ -1,6 +1,7 @@
 package tr.edu.yildiz.ce.se.base.domain.common;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class TenantUser implements Serializable {
     private String tenantId;
@@ -59,7 +60,10 @@ public class TenantUser implements Serializable {
     }
 
     public String formalName() {
-        return name + " " + surname;
+        final var middleName = !Objects.isNull(this.middleName) && !this.middleName.isEmpty()
+                ? this.middleName + " "
+                : "";
+        return name + " " + middleName + surname;
     }
 
 }
