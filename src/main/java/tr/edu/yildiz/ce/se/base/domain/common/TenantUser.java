@@ -60,10 +60,10 @@ public class TenantUser implements Serializable {
     }
 
     public String formalName() {
-        final var middleName = !Objects.isNull(this.middleName) && !this.middleName.isEmpty()
+        final var middlename = !Objects.isNull(this.middleName) && !this.middleName.isEmpty()
                 ? this.middleName + " "
                 : "";
-        return name + " " + middleName + surname;
+        return name + " " + middlename + surname;
     }
 
 }
