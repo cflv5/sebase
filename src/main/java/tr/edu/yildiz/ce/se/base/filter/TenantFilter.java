@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -21,10 +22,11 @@ import tr.edu.yildiz.ce.se.base.context.TenantFactory;
 import tr.edu.yildiz.ce.se.base.domain.HeaderConstants;
 
 @Component
+@Order(1)
 public class TenantFilter extends OncePerRequestFilter {
     private static final Logger LOGGER = LoggerFactory.getLogger(TenantFilter.class);
 
-    private static final List<String> excludedURLs = List.of("/v1/api/user/login", "/v1/api/user/register");
+    private static final List<String> excludedURLs = List.of("/v1/api/users/login", "/v1/api/users/register");
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
