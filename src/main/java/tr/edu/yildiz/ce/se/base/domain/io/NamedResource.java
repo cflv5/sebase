@@ -10,7 +10,8 @@ public class NamedResource extends ByteArrayResource {
         this.name = name;
     }
 
-    public String getResourceName() {
+    @Override
+    public String getFilename() {
         return name;
     }
 
