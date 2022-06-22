@@ -3,6 +3,7 @@ package tr.edu.yildiz.ce.se.base.filter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -34,6 +35,12 @@ public class TenantFilter extends OncePerRequestFilter {
         LOGGER.info("Intercepting request.");
         var tenantId = request.getHeader(HeaderConstants.TENANT_ID);
         var accessToken = request.getHeader(HeaderConstants.ACCESS_TOKEN);
+        var requestId = request.getHeader(HeaderConstants.REQUEST_ID);
+
+        if (tr.edu.yildiz.ce.se.base.util.StringUtils.isBlank(requestId)) {
+            requestId =  UUID.randomUUID().toString();
+            response.setHeader(HeaderConstants.REQUEST_ID, requestId);
+        }
 
         if (Objects.isNull(tenantId) || tenantId.isEmpty()) {
             LOGGER.info("No tenant found");
@@ -45,7 +52,7 @@ public class TenantFilter extends OncePerRequestFilter {
                 response.sendError(HttpStatus.UNAUTHORIZED.value());
                 return;
             }
-            TenantContext.setCurrentTenant(TenantFactory.createTenant(tenantId));
+            TenantContext.setCurrentTenant(TenantFactory.createTenant(tenantId, requestId));
             LOGGER.info("Tenant set with id {}", tenantId);
             filterChain.doFilter(request, response);
         }
