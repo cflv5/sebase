@@ -12,11 +12,11 @@ public final class TenantFactory {
         throw new IllegalStateException("No instance allowed!");
     }
 
-    public static synchronized Tenant createTenant(String tenantId) {
+    public static synchronized Tenant createTenant(String tenantId, String requestId) {
         var tenant = cache.get(tenantId);
 
         if (Objects.isNull(tenant)) {
-            tenant = new Tenant(tenantId);
+            tenant = new Tenant(tenantId, requestId);
             cache.put(tenantId, tenant);
         }
 
